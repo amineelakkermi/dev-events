@@ -1,13 +1,17 @@
 import EventCard from '@/components/EventCard'
 import ExploreBtn from '@/components/ExploreBtn'
-import { events } from '@/lib/constants'
-import { time } from 'console'
-import { title } from 'process'
-import React from 'react'
+import { IEvent } from '@/database'
+import { cacheLife } from 'next/cache';
+import React, { Suspense } from 'react'
 
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-const page = () => {
+const Page = async () => {
+  'use cache';
+  cacheLife('hours');
+  const response = await fetch(`${BASE_URL}/api/events`);
+  const { events } = await response.json();
   return (
     <section>
     <h1 className='text-center'>Welcoome to Nextjs 16...</h1>
@@ -18,8 +22,8 @@ const page = () => {
     <h3>Featured Events</h3>
     
     <ul className='events'>
-    {events.map((event) => (
-     <li key={event.title}>
+    { events && events.length > 0 && events.map((event: IEvent) => (
+     <li key={event.title} className='list-none'>
       <EventCard {...event} />
      </li>
     ))}
@@ -28,7 +32,8 @@ const page = () => {
 
     </div>
     </section>
+
   )
 }
 
-export default page
+export default Page
