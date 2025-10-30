@@ -6,26 +6,9 @@ import Image from "next/image";
 import BookEvent from "@/components/BookEvent";
 import EventCard from "@/components/EventCard";
 import {cacheLife} from "next/cache";
+import getBaseUrl from '@/lib/url.action';
 
-function getBaseUrl() {
-  let url = process.env.NEXT_PUBLIC_BASE_URL
 
-  // Si non définie ou incomplète, fallback selon l'environnement
-  if (!url) {
-    if (process.env.VERCEL_URL) {
-      url = `https://${process.env.VERCEL_URL}`
-    } else {
-      url = 'http://localhost:3000'
-    }
-  }
-
-  // Ajoute https:// si manquant
-  if (!url.startsWith('http')) {
-    url = `https://${url}`
-  }
-
-  return url
-}
 const EventDetailItem = ({ icon, alt, label }: { icon: string; alt: string; label: string; }) => (
     <div className="flex-row-gap-2 items-center">
         <Image src={icon} alt={alt} width={17} height={17} />

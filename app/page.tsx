@@ -1,35 +1,17 @@
 import EventCard from '@/components/EventCard'
 import ExploreBtn from '@/components/ExploreBtn'
+import getBaseUrl from '@/lib/url.action'
 import { cacheLife } from 'next/cache'
 import React from 'react'
 
-// 🔧 Utilitaire pour garantir une URL valide
-function getBaseUrl() {
-  let url = process.env.NEXT_PUBLIC_BASE_URL
 
-  // Si non définie ou incomplète, fallback selon l'environnement
-  if (!url) {
-    if (process.env.VERCEL_URL) {
-      url = `https://${process.env.VERCEL_URL}`
-    } else {
-      url = 'http://localhost:3000'
-    }
-  }
-
-  // Ajoute https:// si manquant
-  if (!url.startsWith('http')) {
-    url = `https://${url}`
-  }
-
-  return url
-}
 
 const Page = async () => {
   'use cache'
   cacheLife('hours')
 
   // 🔒 Utilise une URL valide dans tous les contextes
-  const BASE_URL = getBaseUrl()
+  const BASE_URL = getBaseUrl();
   const response = await fetch(`${BASE_URL}/api/events`, { next: { revalidate: 3600 } })
 
   // Vérifie que la réponse est correcte
